@@ -2,10 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.stream.StreamSupport;
 import java.util.stream.Collectors;
 
@@ -62,7 +59,7 @@ public class Lab3 {
     // Phase 1: Read in each file and chop it into n-grams.
     static BST<Path, Ngram[]> readPaths(Path[] paths) throws IOException {
         BST<Path, Ngram[]> files = new BST<Path, Ngram[]>();
-        for (Path path: paths) {
+        for (Path path : paths) {
             String contents = new String(Files.readAllBytes(path));
             Ngram[] ngrams = Ngram.ngrams(contents, 5);
             // Remove duplicates from the ngrams list
@@ -80,9 +77,31 @@ public class Lab3 {
 
     // Phase 2: Build index of n-grams (not implemented yet).
     static BST<Ngram, ArrayList<Path>> buildIndex(BST<Path, Ngram[]> files) {
-      BST<Ngram, ArrayList<Path>> index = new BST<Ngram, ArrayList<Path>>();
-      // TODO: build index of n-grams
-      return index;
+        BST<Ngram, ArrayList<Path>> index = new BST<Ngram, ArrayList<Path>>();
+        ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
+        for (Path path : files.keys()) {
+            Ngram[] n = files.get(path);
+            for (int i = 0; i < n.length; i++) {
+                if (!ngrams.contains(n[i])) {
+                    ngrams.add(n[i]);
+                }
+            }
+        }
+
+        for (Ngram n : ngrams) {
+            ArrayList<Path> p = new ArrayList<Path>();
+            for (Path path : files.keys()) {
+                Ngram[] ngrams1 = files.get(path);
+                for (int i = 0; i < ngrams1.length; i++)
+                    if (ngrams1[i].equals(n)) {
+                        p.add(path);
+                        i = ngrams1.length;
+                    }
+            }
+            index.put(n, p);
+        }
+        // TODO: build index of n-grams
+        return index;
     }
 
     // Phase 3: Count how many n-grams each pair of files has in common.
@@ -91,26 +110,20 @@ public class Lab3 {
         // N.B. Path is Java's class for representing filenames.
         // PathPair represents a pair of Paths (see PathPair.java).
         BST<PathPair, Integer> similarity = new BST<PathPair, Integer>();
-        for (Path path1: files.keys()) {
-            for (Path path2: files.keys()) {
-                if (path1.equals(path2))
-                    continue;
 
-                Ngram[] ngrams1 = files.get(path1);
-                Ngram[] ngrams2 = files.get(path2);
-                for (Ngram ngram1: ngrams1) {
-                    for (Ngram ngram2: ngrams2) {
-                        if (ngram1.equals(ngram2)) {
-                            PathPair pair = new PathPair(path1, path2);
-                            if (!similarity.contains(pair))
-                                similarity.put(pair, 0);
-                            similarity.put(pair, similarity.get(pair)+1);
-                        }
-                    }
+        for (Ngram ngram : index.keys()) {
+            for (Path path1 : index.get(ngram)) {
+                for (Path path2 : index.get(ngram)) {
+                    if (path1.equals(path2))
+                        continue;
+
+                    PathPair pair = new PathPair(path1, path2);
+                    if (!similarity.contains(pair))
+                        similarity.put(pair, 0);
+                    similarity.put(pair, similarity.get(pair) + 1);
                 }
             }
         }
-
         return similarity;
     }
 
