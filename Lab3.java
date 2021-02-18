@@ -78,30 +78,30 @@ public class Lab3 {
     // Phase 2: Build index of n-grams (not implemented yet).
     static BST<Ngram, ArrayList<Path>> buildIndex(BST<Path, Ngram[]> files) {
         BST<Ngram, ArrayList<Path>> index = new BST<Ngram, ArrayList<Path>>();
-        ArrayList<Ngram> ngrams = new ArrayList<Ngram>();
-        for (Path path : files.keys()) {
-            Ngram[] n = files.get(path);
-            for (int i = 0; i < n.length; i++) {
-                if (!ngrams.contains(n[i])) {
-                    ngrams.add(n[i]);
+        for(Path path : files.keys()){
+            for (Ngram ngram : files.get(path)) {
+                if(index.contains(ngram)){
+                    index.get(ngram).add(path);
+                }else{
+                    ArrayList<Path> paths = new ArrayList<Path>();
+                    paths.add(path);
+                    index.put(ngram, paths);
+                }
+            }
+        }
+        printBST(false, index);
+        // TODO: build index of n-grams
+        return index;
+    }
+    public static void printBST(Boolean print, BST<Ngram, ArrayList<Path>> index ){
+        if(print == true){
+            for(Ngram ngram : index.keys()){
+                for (Path path : index.get(ngram)) {
+                    System.out.println(ngram + " " +path);
                 }
             }
         }
 
-        for (Ngram n : ngrams) {
-            ArrayList<Path> p = new ArrayList<Path>();
-            for (Path path : files.keys()) {
-                Ngram[] ngrams1 = files.get(path);
-                for (int i = 0; i < ngrams1.length; i++)
-                    if (ngrams1[i].equals(n)) {
-                        p.add(path);
-                        i = ngrams1.length;
-                    }
-            }
-            index.put(n, p);
-        }
-        // TODO: build index of n-grams
-        return index;
     }
 
     // Phase 3: Count how many n-grams each pair of files has in common.
@@ -116,7 +116,6 @@ public class Lab3 {
                 for (Path path2 : index.get(ngram)) {
                     if (path1.equals(path2))
                         continue;
-
                     PathPair pair = new PathPair(path1, path2);
                     if (!similarity.contains(pair))
                         similarity.put(pair, 0);
