@@ -146,20 +146,18 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
 
         if (cmp < 0) {
             node.left = put(node.left, key, val);
-            if(!(node.height - 1 >= alpha * log2(node.size))){
-                rebuild(node);
-            }
         } else if (cmp > 0) {
             node.right = put(node.right, key, val);
-            if(!(node.height - 1 >= alpha * log2(node.size))){
-                rebuild(node);
-            }
         } else {
             node.val = val;
         }
+        if(!(node.height - 1 <= alpha * log2(node.size))) {
+            node = rebuild(node);
+            node = put(node, node.key, node.val);
+        }
 
-        node.size = 1 + size(node.left) + size(node.right);
-        node.height = 1 + Math.max(height(node.left), height(node.right));
+            node.size = 1 + size(node.left) + size(node.right);
+            node.height = 1 + Math.max(height(node.left), height(node.right));
 
         //throw new UnsupportedOperationException();
         return node;
@@ -182,22 +180,12 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
     // Perform an inorder traversal of the subtree rooted at 'node',
     // storing its nodes into the ArrayList 'nodes'.
     private void inorder(Node node, ArrayList<Node> nodes) {
-        if (node == null) {
-            throw new UnsupportedOperationException();
+        if(node==null){
+            return;
         }
-        Stack<Node> s = new Stack<Node>();
-        s.push(node);
-        while (!s.empty()) {
-            Node currentNode = s.pop();
-            if (currentNode.left != null) {
-                s.push(currentNode.left);
-            }else{
-                nodes.add(currentNode);
-                if(currentNode.right != null){
-                    s.push(currentNode.right);
-                }
-            }
-        }
+        inorder(node.left, nodes);
+        nodes.add(node);
+        inorder(node.right, nodes);
     }
 
     // Given an array of nodes, and two indexes 'lo' and 'hi',
@@ -210,10 +198,9 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         }
         int mid = (lo + hi) / 2;
 
-        Node nodeLeft= balanceNodes(nodes, lo, mid - 1);
+        Node nodeLeft = balanceNodes(nodes, lo, mid-1);
         Node nodeRight = balanceNodes(nodes, mid+1, hi);
         Node currentNode = nodes.get(mid);
-        put(currentNode, currentNode.key, currentNode.val);
         currentNode.left = nodeLeft;
         currentNode.right = nodeRight;
         currentNode.size = 1 + size(currentNode.left) + size(currentNode.right);

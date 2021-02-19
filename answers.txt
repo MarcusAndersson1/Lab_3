@@ -17,7 +17,7 @@ Group members:
 **    a small constant - that is, there is not much plagiarised text.
 ******************************************************************************/
 
-[...]
+[O(n^2)]
 
 /******************************************************************************
 ** 2. How long did the program take on the 'small' and 'medium' directories?
@@ -25,14 +25,19 @@ Group members:
 **    Explain very briefly why.
 *******************************************************************************/
 
-[...]
+[ small took 3.29 sec and medium 317.14 sec calculating the worst case complexity it is approximately  twice as fast as
+worst case calculated complexity]
 
 /******************************************************************************
 ** 3. How long do you predict the program would take to run on
 **    the 'huge' directory? Show your calculations.
 *******************************************************************************/
 
-[...]
+[Medium size 200 000 time 317,14 sec
+Large size 4 000 000 time ?
+O(n^2) ->   (size_medium ^2) * c = 317,14
+        large_time =  large_size^2 * ((317,14)/(size_medium ^2))
+        ]
 
 /******************************************************************************
 ** Task: Using binary search trees
@@ -41,7 +46,7 @@ Group members:
 **    Say very briefly how you deduced this.
 ******************************************************************************/
 
-[...]
+[If you have many ngrams in a row in ascending or descending order the tree will get unbalanced]
 
 /******************************************************************************
 ** 5 (optional). Is there a simple way to stop these trees becoming unbalanced?
@@ -57,7 +62,8 @@ Group members:
 **    of N 5-grams, and a constant number of duplicate occurrences of 5-grams.
 ******************************************************************************/
 
-[...]
+[build index is O(nlog(n) due that n is the amount of ngrams and to do this you have to iterate through all paths but you
+only visit every ngram once, then put has amortized log(n) complexity ]
 
 /******************************************************************************
 ** 7 (optional). What if the total similarity score is an arbitrary number S,
@@ -72,15 +78,15 @@ Group members:
 ** A. Approximately how many hours did you spend on the assignment?
 ******************************************************************************/
 
-[..group member..]:  [..hours..]
-[..group member..]:  [..hours..]
-[..group member..]:  [..hours..]
+[Jonatan Andersson ]:  [15 h]
+[Richard Novenius]:  [ 10h]
+[Marcus Andersson]:  [ 6h ]
 
 /******************************************************************************
 ** B. Are there any known bugs / limitations?
 ******************************************************************************/
 
-[...]
+[Not what we know but we barely made the ScapegoatTree work so have not tested everything]
 
 /******************************************************************************
 ** C. Did you collaborate with any other students on this lab?
@@ -89,13 +95,13 @@ Group members:
 **    may have used in creating your design.
 ******************************************************************************/
 
-[...]
+[na....]
 
 /******************************************************************************
 ** D. Describe any serious problems you encountered.                    
 ******************************************************************************/
 
-[...]
+[Yes we had serious problems getting the scapegoat tree to work ]
 
 /******************************************************************************
 ** E. List any other comments here.
