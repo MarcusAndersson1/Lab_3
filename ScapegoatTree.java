@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  *  The {@code ScapegoatTree} class represents an ordered map of generic
@@ -110,7 +111,6 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
             throw new IllegalArgumentException("calls get() with a null key");
         if (x == null)
             return null;
-
         int cmp = key.compareTo(x.key);
         if (cmp < 0)
             return get(x.left, key);
@@ -139,20 +139,30 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         if (node == null)
             return new Node(key, val);
 
-        int cmp = key.compareTo(node.key);
-
         // TODO: finish implementing put.
         // If you like you can start from the code for put in BST.java.
         // Read the lab instructions for more hints!
+        int cmp = key.compareTo(node.key);
+
         if (cmp < 0) {
-            // key is less than node.key
+            node.left = put(node.left, key, val);
+            if(!(node.height - 1 >= alpha * log2(node.size))){
+                rebuild(node);
+            }
         } else if (cmp > 0) {
-            // key is greater than node.key
+            node.right = put(node.right, key, val);
+            if(!(node.height - 1 >= alpha * log2(node.size))){
+                rebuild(node);
+            }
         } else {
-            // key is equal to node.key
+            node.val = val;
         }
 
-        throw new UnsupportedOperationException();
+        node.size = 1 + size(node.left) + size(node.right);
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+
+        //throw new UnsupportedOperationException();
+        return node;
     }
 
     // Rebuild a tree to make it perfectly balanced.
@@ -164,7 +174,6 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
     // not the node that you passed in as a parameter.
     private Node rebuild(Node node) {
         rebuilds++; // update statistics
-
         ArrayList<Node> nodes = new ArrayList<Node>(size(node));
         inorder(node, nodes);
         return balanceNodes(nodes, 0, nodes.size()-1);
@@ -173,9 +182,22 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
     // Perform an inorder traversal of the subtree rooted at 'node',
     // storing its nodes into the ArrayList 'nodes'.
     private void inorder(Node node, ArrayList<Node> nodes) {
-        // TODO: use in-order traversal to store 'node'
-        // and all descendants into 'nodes' ArrayList
-        throw new UnsupportedOperationException();
+        if (node == null) {
+            throw new UnsupportedOperationException();
+        }
+        Stack<Node> s = new Stack<Node>();
+        s.push(node);
+        while (!s.empty()) {
+            Node currentNode = s.pop();
+            if (currentNode.left != null) {
+                s.push(currentNode.left);
+            }else{
+                nodes.add(currentNode);
+                if(currentNode.right != null){
+                    s.push(currentNode.right);
+                }
+            }
+        }
     }
 
     // Given an array of nodes, and two indexes 'lo' and 'hi',
@@ -183,18 +205,23 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
     // nodes[lo]..nodes[hi].
     private Node balanceNodes(ArrayList<Node> nodes, int lo, int hi) {
         // Base case: empty subarray.
-        if (lo > hi)
+        if (lo > hi){
             return null;
+        }
+        int mid = (lo + hi) / 2;
 
-        // Midpoint of subarray.
-        int mid = (lo+hi)/2;
-
-        // TODO: finish this method.
-        //
+        Node nodeLeft= balanceNodes(nodes, lo, mid - 1);
+        Node nodeRight = balanceNodes(nodes, mid+1, hi);
+        Node currentNode = nodes.get(mid);
+        put(currentNode, currentNode.key, currentNode.val);
+        currentNode.left = nodeLeft;
+        currentNode.right = nodeRight;
+        currentNode.size = 1 + size(currentNode.left) + size(currentNode.right);
+        currentNode.height = 1 + Math.max(height(currentNode.left), height(currentNode.right));
         // The algorithm uses divide and conquer. Here is how it
         // should work.
         //
-        // (1) Recursively call balanceNodes on two subarrays:
+        // (1) Recursively call balanceNodes on two subarray:
         //     (a) everything left of 'mid'
         //     (b) everything right of 'mid'
         // (2) Make a node containing the key/value at index 'mid',
@@ -204,9 +231,9 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         // (4) Correctly set the 'size' and 'height' fields for the
         //      node.
         // (5) Return the node!
-        throw new UnsupportedOperationException();
-    }
 
+        return currentNode;
+    }
     // Returns the binary logarithm of a number.
     private static double log2(int n) {
         return Math.log(n) / Math.log(2);
@@ -311,7 +338,6 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
             && isHeightConsistent(x.left)
             && isHeightConsistent(x.right);
     }
-
     // is the tree sufficiently balanced?
     private boolean isBalanced() { return isBalanced(root); }
     private boolean isBalanced(Node x) {
@@ -320,5 +346,4 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
             && isBalanced(x.left)
             && isBalanced(x.right);
     }
-
 }
