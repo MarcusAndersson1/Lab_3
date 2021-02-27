@@ -33,6 +33,7 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
 
     private Node root;             // root of BST
     private int rebuilds;          // number of times rebuild() was called, for statistics
+    private int count;
 
     private class Node {
         private Key key;           // sorted by key
@@ -63,6 +64,10 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
      */
     public boolean isEmpty() {
         return root == null;
+    }
+
+    public Node getRoot() {
+        return root;
     }
 
     /**
@@ -151,15 +156,14 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         } else {
             node.val = val;
         }
-        if(!(node.height - 1 <= alpha * log2(node.size))) {
+        node.size = 1 + size(node.left) + size(node.right);
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+        if(!(node.height-1 <= 2 * log2(node.size))) {
             node = rebuild(node);
             node = put(node, node.key, node.val);
         }
 
-            node.size = 1 + size(node.left) + size(node.right);
-            node.height = 1 + Math.max(height(node.left), height(node.right));
-
-        //throw new UnsupportedOperationException();
+        // throw new UnsupportedOperationException();
         return node;
     }
 
@@ -171,6 +175,7 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
     // So after you call this method, make sure to use the return value,
     // not the node that you passed in as a parameter.
     private Node rebuild(Node node) {
+       // System.out.println("Hallå eller!!");
         rebuilds++; // update statistics
         ArrayList<Node> nodes = new ArrayList<Node>(size(node));
         inorder(node, nodes);
@@ -186,6 +191,32 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         inorder(node.left, nodes);
         nodes.add(node);
         inorder(node.right, nodes);
+
+    }
+    public void printLevel(Node node) {
+
+        if(node==null){
+            return;
+        }
+        if(node == root){
+            System.out.println(node.val.toString());
+        }
+        if(node.left==null){
+            System.out.print("- ");
+
+        }else{
+            System.out.println("left " + node.left.val.toString() );
+            printLevel(node.left);
+
+        }
+        if(node.right==null){
+            System.out.print( " +" );
+        }else{
+            System.out.println(" right " + node.right.val.toString() );
+            printLevel(node.right);
+        }
+
+
     }
 
     // Given an array of nodes, and two indexes 'lo' and 'hi',
