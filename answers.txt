@@ -69,7 +69,10 @@ Group members:
 [
  Build index is O(nlog(n) due to that n is the amount of ngrams and to do this you have to iterate through all paths but you
  only visit every ngram once, then put has amortized O(log(n)) complexity
- and findSimilarities has O(n*log(n)) so total complexity is  nlog(n) + log(n) = O(nlog(n)
+ and findSimilarities has O(n*log(n)) so total complexity is  nlog(n) + nlog(n) = O(nlog(n)
+
+ ((you could argue that find similarities is O(m*log(m)) where m is much smaller than n but if the files dont contains any similarities n=m;))
+
  Answer:  O(nlog(n) is the total asymptotic complexity]
 
 /******************************************************************************
