@@ -4,9 +4,9 @@
 *******************************************************************************/
 
 Group members:
-- [...]
-- [...]
-- [...]
+- [Jonatan Andersson]
+- [Richard Novenius]
+- [Marcus Andersson]
 
 /******************************************************************************
 ** Task: Running the slow program
@@ -25,19 +25,21 @@ Group members:
 **    Explain very briefly why.
 *******************************************************************************/
 
-[ small took 3.29 sec and medium 317.14 sec calculating the worst case complexity it is approximately  twice as fast as
-worst case calculated complexity]
+[ small took 3.29 sec and medium 317.14 sec calculating t2  = t1(n2/n1)^2  = 500 sec
+ so 500sec is worst case considering that this is with small input size this seem reasonable ]
 
 /******************************************************************************
 ** 3. How long do you predict the program would take to run on
 **    the 'huge' directory? Show your calculations.
 *******************************************************************************/
 
-[Medium size 200 000 time 317,14 sec
-Large size 4 000 000 time ?
-O(n^2) ->   (size_medium ^2) * c = 317,14
-        large_time =  large_size^2 * ((317,14)/(size_medium ^2))
-        ]
+[
+ n1 =  200 000, t1 = 317,14 sec
+ n2 = 4 000 000, t2 = ?
+ where n is input size and t is time.
+ what is t2 ?
+ t2  = t1(n2/n1)^2
+ which results in 35h ]
 
 /******************************************************************************
 ** Task: Using binary search trees
@@ -46,7 +48,9 @@ O(n^2) ->   (size_medium ^2) * c = 317,14
 **    Say very briefly how you deduced this.
 ******************************************************************************/
 
-[If you have many ngrams in a row in ascending or descending order the tree will get unbalanced]
+[index becomes unbalanced, we deduced since the size/ rebuild is the highest
+  this means that the rebuild ratio is higher],
+  without scapegoattree the index tree would become highly unbalanced]
 
 /******************************************************************************
 ** 5 (optional). Is there a simple way to stop these trees becoming unbalanced?
@@ -62,8 +66,11 @@ O(n^2) ->   (size_medium ^2) * c = 317,14
 **    of N 5-grams, and a constant number of duplicate occurrences of 5-grams.
 ******************************************************************************/
 
-[build index is O(nlog(n) due that n is the amount of ngrams and to do this you have to iterate through all paths but you
-only visit every ngram once, then put has amortized log(n) complexity ]
+[
+ Build index is O(nlog(n) due to that n is the amount of ngrams and to do this you have to iterate through all paths but you
+ only visit every ngram once, then put has amortized log(n) complexity
+ and findSimilarities is as mentioned in question 1 O(n^2) so total complexity is  O(nlog(n) + n^2) = O(n^2).
+ Answer:  O(n^2) is the total asymptotic]
 
 /******************************************************************************
 ** 7 (optional). What if the total similarity score is an arbitrary number S,
