@@ -79,7 +79,7 @@ public class Lab3 {
     static ScapegoatTree<Ngram, ArrayList<Path>> buildIndex(ScapegoatTree<Path, Ngram[]> files) {
         ScapegoatTree<Ngram, ArrayList<Path>> index = new ScapegoatTree<Ngram, ArrayList<Path>>();
         for(Path path : files.keys()){
-            for (Ngram ngram : files.get(path)) {
+            for (Ngram ngram : files.get(path)) { //log(n)
                 if(index.contains(ngram)){
                     index.get(ngram).add(path);
                 }else{

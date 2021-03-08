@@ -191,7 +191,6 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
         inorder(node.left, nodes);
         nodes.add(node);
         inorder(node.right, nodes);
-
     }
     public void printLevel(Node node) {
 
@@ -228,10 +227,9 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> {
             return null;
         }
         int mid = (lo + hi) / 2;
-
+        Node currentNode = nodes.get(mid);
         Node nodeLeft = balanceNodes(nodes, lo, mid-1);
         Node nodeRight = balanceNodes(nodes, mid+1, hi);
-        Node currentNode = nodes.get(mid);
         currentNode.left = nodeLeft;
         currentNode.right = nodeRight;
         currentNode.size = 1 + size(currentNode.left) + size(currentNode.right);

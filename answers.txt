@@ -68,9 +68,9 @@ Group members:
 
 [
  Build index is O(nlog(n) due to that n is the amount of ngrams and to do this you have to iterate through all paths but you
- only visit every ngram once, then put has amortized log(n) complexity
- and findSimilarities is as mentioned in question 1 O(n^2) so total complexity is  O(nlog(n) + n^2) = O(n^2).
- Answer:  O(n^2) is the total asymptotic]
+ only visit every ngram once, then put has amortized O(log(n)) complexity
+ and findSimilarities has O(n*log(n)) so total complexity is  nlog(n) + log(n) = O(nlog(n)
+ Answer:  O(nlog(n) is the total asymptotic complexity]
 
 /******************************************************************************
 ** 7 (optional). What if the total similarity score is an arbitrary number S,
