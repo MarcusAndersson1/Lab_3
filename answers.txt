@@ -17,7 +17,23 @@ Group members:
 **    a small constant - that is, there is not much plagiarised text.
 ******************************************************************************/
 
-[O(n^2)]
+
+[ so n is the amount of ngrams in all documents to mathematicaly explain this we can say that
+f1 {n = d * NgramInD}
+
+for each document d1:         //  O(d)
+     for each document d2 ≠ d1: //  O(d)
+         for each 5-gram n1 in d1:  // O(NgramInD)
+             for each 5-gram n2 in d2: // O(NgramInD)
+                 if n1 = n2:  O(1)
+                     increase the similarity of d1 and d2 by 1 O(1)
+
+
+      tot O(d) * O(d) O(ngram) * O(ngram)*( O(1) + O(1)) remove constants
+          O(d*ngram) * O(d*Ngram)  = O(n) * O(n) // according to f1
+          O(n^2)
+
+Answer:    O(n^2)]
 
 /******************************************************************************
 ** 2. How long did the program take on the 'small' and 'medium' directories?
@@ -25,8 +41,8 @@ Group members:
 **    Explain very briefly why.
 *******************************************************************************/
 
-[ small took 3.29 sec and medium 317.14 sec calculating t2  = t1(n2/n1)^2  = 500 sec
- so 500sec is worst case considering that this is with small input size this seem reasonable ]
+[ small took 3.29 sec and medium 317.14 sec calculating t2  = t1(n2/n1)^2  = 329 sec
+ so 329 > 317.14 so comparing to the complexity it acts like expected.  ]
 
 /******************************************************************************
 ** 3. How long do you predict the program would take to run on
@@ -67,6 +83,40 @@ Group members:
 ******************************************************************************/
 
 [
+
+buildIndex
+
+        for(Path path : files.keys()){                              // just needed to go through all paths doesnt
+            for (Ngram ngram : files.get(path)) {                   // O(n) + log(n) the operation files get is a log(n) operation
+                if(index.contains(ngram)){                          // O(log(n)
+                    index.get(ngram).add(path);                     // O(log(n)) + O(log(n))
+                }else{
+                    ArrayList<Path> paths = new ArrayList<Path>();  // O(1)
+                    paths.add(path);                                // O(1
+                    index.put(ngram, paths);                        // O(log(n))
+                }
+            }
+        }
+        tot (O(n) + log(n)) * (O(log(n)) + O(log(n)) + O(log(n) + O(1) + O(1) + O(log(n)
+        only consider highest complexity O(n) * O(log(n) = O(n*log(n))
+
+findSimilarities
+        for (Ngram ngram : index.keys()) {              // O(n)
+            for (Path path1 : index.get(ngram)) {       //  since we assuming that the amount of similarities are small O(1)
+                for (Path path2 : index.get(ngram)) {   //  since we assuming that the amount of similarities are small O(1)
+                    if (path1.equals(path2))            // O(1)
+                        continue;
+                    PathPair pair = new PathPair(path1, path2);     // O(1)
+                    if (!similarity.contains(pair))                 // O(log(n))
+                    similarity.put(pair, 0);                        // O(log(n)
+                    similarity.put(pair, similarity.get(pair) + 1); // O(log(n)) + O(log(n)
+                }
+            }
+        }
+        tot O(n) *(O(1) + O(1) + O(1) O(1) + O(log(n)) + O(log(n) + O(log(n)) + O(log(n) )
+        only consider highest complexity O(n) * O(log(n) = O(n*log(n))
+
+
  Build index is O(nlog(n) due to that n is the amount of ngrams and to do this you have to iterate through all paths but you
  only visit every ngram once, then put has amortized O(log(n)) complexity
  and findSimilarities has O(n*log(n)) so total complexity is  nlog(n) + nlog(n) = O(nlog(n)
