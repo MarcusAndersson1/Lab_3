@@ -18,7 +18,7 @@ Group members:
 ******************************************************************************/
 
 
-[ so n is the amount of ngrams in all documents to mathematicaly explain this we can say that
+[ so n is the amount of ngrams in all documents to mathematical explain this we can say that
 f1 {n = d * NgramInD}
 
 for each document d1:         //  O(d)
